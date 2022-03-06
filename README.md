@@ -1,3 +1,9 @@
+# Description
+This is clone of one of ChameleonTartu repos!! 
+Creds for original scripts to him!
+
+https://github.com/ChameleonTartu
+
 ## Description
 
 This is an optimized version of DRipper. Here is original code: https://gist.github.com/scamp/33807688d0ebdcfbd4c29a4b992a8b54, you can see there a lot of cons like extra requests to Facebook and validator.w3.com, trying establishing connection with attacked resource (but there is no need in it if you want to send a UDP packet). Also the old version is inefficient: you need run several processes to have your processor busy.
@@ -60,3 +66,9 @@ Swagger documentation is under
 ```
 http://localhost:49155/docs
 ```
+
+## Running test server
+
+cd test-server/src
+javac TestSocketServer.java
+java TestSocketServer
