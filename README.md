@@ -13,7 +13,7 @@ This is an optimized version of DRipper. Here is original code: https://gist.git
 1. Docker
 
 ```bash
-docker run -ti --rm alexmon1989/dripper:latest -s 213.24.76.23 -p 80 -t 100
+docker run -ti --rm alexmon1989/dripper:latest -s testip -p 80 -t 100
 ```
 
 2. Directly with Python.
@@ -37,9 +37,9 @@ git clone https://github.com/alexmon1989/russia_ddos.git
 cd russia_ddos
 
 # run
-python -u DRipper.py -s 213.24.76.23 -p 80 -t 100 -r 1 -m udp
+python -u DRipper.py -s testip -p 80 -t 100 -r 1 -m udp
 # OR
-python3 -u DRipper.py -s 213.24.76.23 -p 80 -t 100 -r 1 -m udp
+python3 -u DRipper.py -s testip -p 80 -t 100 -r 1 -m udp
 ```
 
 
@@ -69,6 +69,8 @@ http://localhost:49155/docs
 
 ## Running test server
 
+```
 cd test-server/src
 javac TestSocketServer.java
 java TestSocketServer
+```
