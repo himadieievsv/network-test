@@ -186,7 +186,7 @@ def get_parameters():
     else:
         random_packet_len = False
 
-    if opts.attack_method and opts.attack_method in ['udp', 'http']:
+    if opts.attack_method and opts.attack_method in ['udp', 'tcp', 'http']:
         attack_method = opts.attack_method
     else:
         attack_method = 'udp'
@@ -227,7 +227,7 @@ if __name__ == '__main__':
         connect_host()
 
     p = str(port) if port else '(22, 53, 80, 443)'
-    print("\033[92m", host, " port: ", p, " threads: ", thr, " mothod: ", attack_method, "\033[0m")
+    print("\033[92m", host, " port: ", p, " threads: ", thr, " method: ", attack_method, "\033[0m")
     print("\033[94mPlease wait...\033[0m")
     user_agent()
     headers()
