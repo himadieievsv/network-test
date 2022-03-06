@@ -65,6 +65,9 @@ def down_it_udp():
             s.sendto(packet, (host, p))
         except socket.gaierror:
             print("\033[91mCan't get server IP. Packet sending failed. Check your VPN.\033[0m")
+        except Exception as e:
+            print("\033[91mError: " + e + ".\033[0m")
+            print("\033[91mPacket sending failed. Check your VPN.\033[0m")
         else:
             print('\033[92m Packet was sent \033[0;0m')
         s.close()
@@ -96,7 +99,7 @@ def down_it_http():
                 context=context
             )
         except Exception as e:
-            print(e)
+            print("\033[91mError: " + e + ".\033[0m")
             print("\033[91mNo connection with server. It could be a reason of current attack or bad VPN connection."
                   " Program will continue working.\033[0m")
         else:
