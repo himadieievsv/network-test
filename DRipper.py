@@ -95,18 +95,15 @@ def down_it_http():
         else:
             url = f"{protocol}{host}:{port}{resource}"
 
-        print(url)
-
         http_headers = headers_dict
         http_headers['User-Agent'] = random.choice(uagent).strip()
 
         try:
             context = ssl._create_unverified_context()
-            r = urllib.request.urlopen(
+            urllib.request.urlopen(
                 urllib.request.Request(url, headers=http_headers),
                 context=context
             )
-            print(r.headers)
         except Exception as e:
             if error_debug:
                 print("\033[91mError: " + str(e) + ".\033[0m")
