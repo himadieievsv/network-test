@@ -50,7 +50,7 @@ def stop_process(process_id: int):
 
 @app.delete("/clear")
 def stop_all_process():
-    for process_id in ddos:
+    for process_id in list(ddos.keys()):
         Popen(['kill', str(process_id)], stdout=PIPE)
         del ddos[process_id]
     return JSONResponse(status_code=202)
