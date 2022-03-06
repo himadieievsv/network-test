@@ -66,7 +66,8 @@ def down_it_udp():
         except socket.gaierror:
             print("\033[91mCan't get server IP. Packet sending failed. Check your VPN.\033[0m")
         except Exception as e:
-            print("\033[91mError: " + e + ".\033[0m")
+            if error_debug:
+                print("\033[91mError: " + str(e) + ".\033[0m")
             print("\033[91mPacket sending failed. Check your VPN.\033[0m")
         else:
             print('\033[92m Packet was sent \033[0;0m')
@@ -99,7 +100,8 @@ def down_it_http():
                 context=context
             )
         except Exception as e:
-            print("\033[91mError: " + e + ".\033[0m")
+            if error_debug:
+                print("\033[91mError: " + str(e) + ".\033[0m")
             print("\033[91mNo connection with server. It could be a reason of current attack or bad VPN connection."
                   " Program will continue working.\033[0m")
         else:
@@ -124,7 +126,8 @@ def down_it_tcp():
                 print("\033[91mshut<->down\033[0m")
             time.sleep(.1)
         except Exception as e:
-            print("\033[91mError: " + e + ".\033[0m")
+            if error_debug:
+                print("\033[91mError: " + str(e) + ".\033[0m")
             print("\033[91mNo connection with server. It could be a reason of current attack or bad VPN connection."
                   " Program will continue working.\033[0m")
             time.sleep(.1)
@@ -141,6 +144,7 @@ def usage():
 	-p : -port default 80
 	-t : -threads default 100
 	-m : -method default udp (udp/tcp/http)
+	-d : -debug debug error messages
     --resource : -api-host under attack\033[0m ''')
     sys.exit()
 
@@ -153,6 +157,7 @@ def get_parameters():
     global random_packet_len
     global attack_method
     global resource
+    global error_debug
     global headers_dict
     optp = OptionParser(add_help_option=False, epilog="Rippers")
     optp.add_option("-s", "--server", dest="host", help="attack to server ip -s ip")
@@ -161,6 +166,8 @@ def get_parameters():
     optp.add_option("-h", "--help", dest="help", action='store_true', help="help you")
     optp.add_option("-r", "--random_len", type="int", dest="random_packet_len",
                     help="Send random packets with random length")
+    optp.add_option("-d", "--debug", dest="error_debug", action="store_false",
+                    help="Debug error messages")
     optp.add_option("-m", "--method", type="str", dest="attack_method",
                     help="Attack method: udp (default), tcp, http")
     optp.add_option('--resource', type='str', dest='resource', help='It shows the resource under attack.', default=True)
@@ -185,6 +192,11 @@ def get_parameters():
         random_packet_len = True
     else:
         random_packet_len = False
+
+    if opts.error_debug is None:
+        error_debug = False
+    else:
+        error_debug = True
 
     if opts.attack_method and opts.attack_method in ['udp', 'tcp', 'http']:
         attack_method = opts.attack_method
