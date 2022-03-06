@@ -48,6 +48,13 @@ def stop_process(process_id: int):
         return p.pid
     return JSONResponse(status_code=404)
 
+@app.delete("/clear")
+def stop_all_process():
+    for process_id in ddos:
+        Popen(['kill', str(process_id)], stdout=PIPE)
+        del ddos[process_id]
+    return JSONResponse(status_code=202)
+
 
 if __name__ == '__main__':
     uvicorn.run(app, host="0.0.0.0", port=49155)
