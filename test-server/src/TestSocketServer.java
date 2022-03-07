@@ -16,7 +16,7 @@ public class TestSocketServer
         String portEnv = System.getenv("PORT");
         int defaultPort = null != args && args.length > 0 ? Integer.parseInt(args[0]) : 10500;
         TestSocketServer server = new TestSocketServer();
-        server.start(portEnv != null ? Integer.parseInt(portEnv) : defaultPort);
+        server.start(portEnv != null && portEnv.length() > 0 ? Integer.parseInt(portEnv) : defaultPort);
     }
 
     public void start(int port) throws Exception
