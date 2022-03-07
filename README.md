@@ -76,7 +76,7 @@ javac TestSocketServer.java
 
 # Run
 jar cmvf META-INF/MANIFEST.MF heroku/TestSocketServer.jar *.class
-java -jar heroku/TestSocketServer.jar
+java -jar heroku/TestSocketServer.jar mod
   
 # Or
 java TestSocketServer

@@ -10,11 +10,26 @@ public class TestSocketServer
 {
     private ServerSocket serverSocket;
     private static AtomicInteger counter = new AtomicInteger(0);
+    private static boolean outEachThousand = false;
 
     public static void main(String[] args) throws Exception
     {
         String portEnv = System.getenv("PORT");
-        int defaultPort = null != args && args.length > 0 ? Integer.parseInt(args[0]) : 10500;
+        int defaultPort = 10500;
+        try {
+            defaultPort = Integer.parseInt(args[0]);
+        }
+        catch (Exception ignored) {
+        }
+        if (null != args) {
+            for (String arg : args) {
+                if ("mod".equals(arg)) {
+                    outEachThousand = true;
+                    System.out.println("Will print each thousand request");
+                    break;
+                }
+            }
+        }
         TestSocketServer server = new TestSocketServer();
         server.start(portEnv != null && portEnv.length() > 0 ? Integer.parseInt(portEnv) : defaultPort);
     }
@@ -53,10 +68,17 @@ public class TestSocketServer
 
                 //String inputLine = in.readLine();
 
-                out.println("closing");
+                out.println("requests: " + incrementAndGet);
 
                 //System.out.println(inputLine);
-                System.out.println("Requests: " + incrementAndGet);
+                if (outEachThousand) {
+                    if (incrementAndGet % 1000 == 0) {
+                        System.out.println("Requests: " + incrementAndGet);
+                    }
+                }
+                else {
+                    System.out.println("Requests: " + incrementAndGet);
+                }
 
                 in.close();
                 out.close();
