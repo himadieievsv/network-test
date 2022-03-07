@@ -72,7 +72,6 @@ def down_it_udp():
             print("\033[91mPacket sending failed. Check your VPN.\033[0m")
         else:
             print('\033[92m Packet was sent \033[0;0m')
-        s.close()
 
         if port:
             i += 1
