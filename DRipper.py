@@ -64,7 +64,7 @@ def down_it_udp():
         p = int(port) if port else get_random_port()
         try:
             s.sendto(packet, (host, p))
-            time.sleep(.05)
+            time.sleep(.01)
             try:
                 s.close()
             except:
@@ -77,7 +77,7 @@ def down_it_udp():
             print("\033[91m Packet sending failed. Check your VPN.\033[0m")
         else:
             print('\033[92m Packet was sent \033[0;0m')
-            time.sleep(.05)
+            time.sleep(.01)
 
         if port:
             i += 1
@@ -123,7 +123,7 @@ def down_it_http():
         else:
             print('\033[92m HTTP-Request was done \033[0;0m')
 
-        time.sleep(.05)
+        time.sleep(.01)
 
 
 def down_it_tcp():
@@ -140,7 +140,7 @@ def down_it_tcp():
                 print('\033[92m TCP Packet was sent \033[0;0m')
             else:
                 print("\033[91m shut<->down \033[0m")
-            time.sleep(.05)
+            time.sleep(.01)
             try:
                 s.close()
             except:
@@ -150,7 +150,7 @@ def down_it_tcp():
                 print("\033[91m Error: " + str(e) + ".\033[0m")
             print("\033[91m No connection with server. It could be a reason of current attack or bad VPN connection."
                   " Program will continue working.\033[0m")
-            time.sleep(.05)
+            time.sleep(.01)
 
 
 def usage():
