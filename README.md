@@ -69,8 +69,26 @@ http://localhost:49155/docs
 
 ## Running test server
 
+Compiling and running locally: 
 ```
 cd test-server/src
 javac TestSocketServer.java
+
+# Run
+jar cmvf META-INF/MANIFEST.MF heroku/TestSocketServer.jar *.class
+java -jar heroku/TestSocketServer.jar
+  
+# Or
 java TestSocketServer
 ```
+Deploy to heroku:
+```
+cd heroku
+heroku plugins:install java
+heroku create --no-remote
+heroku deploy:jar TestSocketServer.jar --app <your app>
+heroku config -a <your app>
+
+heroku logs --tail --app <your app>
+```
+

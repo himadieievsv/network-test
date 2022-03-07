@@ -11,32 +11,40 @@ public class TestSocketServer
     private ServerSocket serverSocket;
     private static AtomicInteger counter = new AtomicInteger(0);
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) throws Exception
+    {
+        String portEnv = System.getenv("PORT");
+        int defaultPort = null != args && args.length > 0 ? Integer.parseInt(args[0]) : 10500;
         TestSocketServer server = new TestSocketServer();
-        server.start(10500);
+        server.start(portEnv != null ? Integer.parseInt(portEnv) : defaultPort);
     }
 
-    public void start(int port) throws Exception {
+    public void start(int port) throws Exception
+    {
         serverSocket = new ServerSocket(port);
         System.out.println("Started on port: " + port);
         while (true)
             new SocketHandler(serverSocket.accept()).start();
     }
 
-    public void stop() throws Exception {
+    public void stop() throws Exception
+    {
         serverSocket.close();
     }
 
-    private static class SocketHandler extends Thread {
+    private static class SocketHandler extends Thread
+    {
         private Socket clientSocket;
         private PrintWriter out;
         private BufferedReader in;
 
-        public SocketHandler(Socket socket) {
+        public SocketHandler(Socket socket)
+        {
             this.clientSocket = socket;
         }
 
-        public void run() {
+        public void run()
+        {
             try {
                 int incrementAndGet = counter.incrementAndGet();
                 out = new PrintWriter(clientSocket.getOutputStream(), true);
@@ -53,7 +61,8 @@ public class TestSocketServer
                 in.close();
                 out.close();
                 clientSocket.close();
-            } catch (IOException e) {
+            }
+            catch (IOException e) {
                 e.printStackTrace();
             }
         }

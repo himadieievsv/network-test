@@ -144,3 +144,4 @@ cython_debug/
 
 # java compiled classes
 *.class
+test-server/**/*.jar
