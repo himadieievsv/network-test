@@ -57,6 +57,8 @@ def down_it_udp():
         if port == 53:
             query = DNSRecord.question(resource)
             packet = bytes(query.pack())
+            if error_debug:
+                print('\033[92m DNS Q: ' + str(query) + ' \033[0;0m')
         else:
             packet = ("GET / HTTP/1.1"
                       + "\nHost: " + host
