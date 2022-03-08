@@ -155,7 +155,10 @@ def down_it_tcp():
         finally:
             try:
                 s.close()
+                s.shutdown(1)
             except:
+                if error_debug:
+                    print("\033[91m Error: " + str(e) + ".\033[0m")
                 print("\033[91m Socket close failed.\033[0m")
 
         time.sleep(.01)
