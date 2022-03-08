@@ -75,6 +75,7 @@ def down_it_udp():
         finally:
             try:
                 s.close()
+                s.shutdown(1)
             except BaseException as e:
                 if error_debug:
                     print("\033[91m Error: " + str(e) + ".\033[0m")
