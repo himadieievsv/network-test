@@ -75,7 +75,9 @@ def down_it_udp():
         finally:
             try:
                 s.close()
-            except:
+            except BaseException as e:
+                if error_debug:
+                    print("\033[91m Error: " + str(e) + ".\033[0m")
                 print("\033[91m Socket close failed.\033[0m")
         time.sleep(.03)
 
