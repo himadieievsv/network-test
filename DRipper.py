@@ -69,7 +69,6 @@ def down_it_udp():
         s.settimeout(5)
         p = int(port) if port else get_random_port()
         try:
-
             s.sendto(packet, (host, p))
         except socket.gaierror:
             print("\033[91m Can't get server IP. Packet sending failed. Check your VPN.\033[0m")
