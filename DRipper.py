@@ -74,19 +74,18 @@ def down_it_udp():
             print("\033[91m Can't get server IP. Packet sending failed. Check your VPN.\033[0m")
         except BaseException as e:
             if error_debug:
-                print("\033[91m Error: " + str(e) + ".\033[0m")
+                print("\033[91m Error: " + str(type(e)) + " " + str(e) + ".\033[0m")
             print("\033[91m Packet sending failed. Check your VPN.\033[0m")
         else:
             print('\033[92m Packet was sent \033[0;0m')
         finally:
             try:
                 s.close()
-                s.shutdown(1)
             except BaseException as e:
                 if error_debug:
-                    print("\033[91m Error: " + str(e) + ".\033[0m")
+                    print("\033[91m Error: " + str(type(e)) + " " + str(e) + ".\033[0m")
                     print("\033[91m Socket close failed.\033[0m")
-        time.sleep(.03)
+        time.sleep(.02)
 
         if port:
             i += 1
@@ -126,7 +125,7 @@ def down_it_http():
                 print("\033[91m Request close failed.\033[0m")
         except BaseException as e:
             if error_debug:
-                print("\033[91m Error: " + str(e) + ".\033[0m")
+                print("\033[91m Error: " + str(type(e)) + " " + str(e) + ".\033[0m")
             print("\033[91m No connection with server. It could be a reason of current attack or bad VPN connection."
                   " Program will continue working.\033[0m")
         else:
@@ -156,22 +155,18 @@ def down_it_tcp():
                 print('\033[92m TCP Packet was sent \033[0;0m')
             else:
                 print("\033[91m shut<->down \033[0m")
-            try:
-                s.close()
-            except:
-                print("\033[91m Socket close failed.\033[0m")
         except BaseException as e:
             if error_debug:
-                print("\033[91m Error: " + str(e) + ".\033[0m")
+                print("\033[91m Error: " + str(type(e)) + " " + str(e) + ".\033[0m")
             print("\033[91m No connection with server. It could be a reason of current attack or bad VPN connection."
                   " Program will continue working.\033[0m")
         finally:
             try:
-                s.close()
                 s.shutdown(1)
+                s.close()
             except BaseException as e:
                 if error_debug:
-                    print("\033[91m Error: " + str(e) + ".\033[0m")
+                    print("\033[91m Error: " + str(type(e)) + " " + str(e) + ".\033[0m")
                     print("\033[91m Socket close failed.\033[0m")
 
         time.sleep(.01)
